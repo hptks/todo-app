@@ -8,16 +8,23 @@ import * as TodoAction from '../actions/TodoAction';
 export default class Home extends React.Component {
 	constructor() {
 		super();
+		this.getTodo=this.getTodos.bind(this);
 		this.state={
 			todos: TodoStore.getTodos()
 		}
 	}
 
 	componentWillMount() {
-		TodoStore.on('change', () => {
-			this.setState({
-				todos: TodoStore.getTodos()
-			});
+		TodoStore.on('change', this.getTodo);
+	}
+
+	componentWillUnmount() {
+		TodoStore.removeListener('change', this.getTodo);
+	}
+
+	getTodos() {
+		this.setState({
+			todos: TodoStore.getTodos()
 		});
 	}
 
